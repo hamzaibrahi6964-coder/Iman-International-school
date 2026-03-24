@@ -1,52 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Portal</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal - Iman International Schools</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="portal-page">
+  <div class="portal-layout">
+    <div class="portal-left">
+      <div>
+        <div class="portal-brand">
+          <img src="logo.jpg" alt="School logo" />
+          <div>
+            <h2>School Portal</h2>
+            <p>Student & Admin Access</p>
+          </div>
+        </div>
 
-<div class="portal-container">
+        <h1>Welcome to Iman International Schools Portal</h1>
+        <p>
+          Access the school portal with your Student ID or Admin details.
+        </p>
+      </div>
 
-  <div class="left">
-    <img src="logo.jpg">
-    <h2>School Portal</h2>
-    <p>Student & Admin Login</p>
+      <ul class="portal-list">
+        <li>Student login access</li>
+        <li>Admin login access</li>
+        <li>Simple and modern login page</li>
+      </ul>
+    </div>
+
+    <div class="portal-right">
+      <div class="portal-card">
+        <div class="portal-card-top">
+          <img src="logo.jpg" alt="School logo" />
+          <div>
+            <h3>Iman International Schools</h3>
+            <p>Portal Login</p>
+          </div>
+        </div>
+
+        <h2>Login</h2>
+
+        <div class="form-group">
+          <label for="loginType">Login Type</label>
+          <select id="loginType">
+            <option>Student</option>
+            <option>Admin</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email or Student ID</label>
+          <input type="text" id="email" placeholder="Enter email or student ID" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter password" />
+        </div>
+
+        <div class="portal-row">
+          <label><input type="checkbox" onclick="togglePassword()"> Show password</label>
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button class="btn portal-btn">Login</button>
+        <p class="back-link"><a href="index.html">← Back to website</a></p>
+      </div>
+    </div>
   </div>
 
-  <div class="right">
-    <h2>Login</h2>
-
-    <select>
-      <option>Student</option>
-      <option>Admin</option>
-    </select>
-
-    <input type="text" placeholder="Email or ID">
-    
-    <input type="password" id="password" placeholder="Password">
-
-    <label>
-      <input type="checkbox" onclick="togglePassword()"> Show Password
-    </label>
-
-    <button class="btn">Login</button>
-  </div>
-
-</div>
-
-<!-- 🔥 SCRIPT INSIDE HTML -->
-<script>
-function togglePassword() {
-  let password = document.getElementById("password");
-
-  if (password.type === "password") {
-    password.type = "text";
-  } else {
-    password.type = "password";
-  }
-}
-</script>
-
+  <script>
+    function togglePassword() {
+      const password = document.getElementById("password");
+      password.type = password.type === "password" ? "text" : "password";
+    }
+  </script>
 </body>
 </html>
