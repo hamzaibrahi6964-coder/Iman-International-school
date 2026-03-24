@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Portal</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="portal-container">
+
+  <div class="left">
+    <img src="logo.jpg">
+    <h2>School Portal</h2>
+    <p>Student & Admin Login</p>
+  </div>
+
+  <div class="right">
+    <h2>Login</h2>
+
+    <select>
+      <option>Student</option>
+      <option>Admin</option>
+    </select>
+
+    <input type="text" placeholder="Email or ID">
+    
+    <input type="password" id="password" placeholder="Password">
+
+    <label>
+      <input type="checkbox" onclick="togglePassword()"> Show Password
+    </label>
+
+    <button class="btn">Login</button>
+  </div>
+
+</div>
+
+<!-- 🔥 SCRIPT INSIDE HTML -->
+<script>
+function togglePassword() {
+  let password = document.getElementById("password");
+
+  if (password.type === "password") {
+    password.type = "text";
+  } else {
+    password.type = "password";
+  }
+}
+</script>
+
+</body>
+</html>
