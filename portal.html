@@ -14,20 +14,20 @@
           <img src="logo.jpg" alt="School logo" />
           <div>
             <h2>School Portal</h2>
-            <p>Student & Admin Access</p>
+            <p>Parent, Teacher & Admin Access</p>
           </div>
         </div>
 
         <h1>Welcome to Iman International Schools Portal</h1>
         <p>
-          Access the school portal with your email and password.
+          Parents can log in with email or student ID. Teachers and admins log in with email.
         </p>
       </div>
 
       <ul class="portal-list">
-        <li>Student login access</li>
-        <li>Admin login access</li>
-        <li>Simple and modern login page</li>
+        <li>Parent portal access</li>
+        <li>Teacher portal access</li>
+        <li>Admin portal access</li>
       </ul>
     </div>
 
@@ -46,14 +46,15 @@
         <div class="form-group">
           <label for="loginType">Login Type</label>
           <select id="loginType">
-            <option>Student</option>
-            <option>Admin</option>
+            <option value="parent">Parent</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" />
+          <label for="loginInput">Email or Student ID</label>
+          <input type="text" id="loginInput" placeholder="Enter email or student ID" />
         </div>
 
         <div class="form-group">
@@ -67,8 +68,7 @@
         </div>
 
         <button class="btn portal-btn" onclick="loginUser()">Login</button>
-
-        <button class="google-btn" onclick="signInWithGoogle()">Continue with Google</button>
+        <p id="message" style="margin-top:12px;color:#c81f32;font-weight:600;"></p>
 
         <p class="back-link"><a href="index.html">← Back to website</a></p>
       </div>
@@ -78,48 +78,95 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <script>
-    function togglePassword() {
-      const password = document.getElementById("password");
-      password.type = password.type === "password" ? "text" : "password";
-    }
-
     const supabaseClient = supabase.createClient(
       "https://glmokdmpzafqufidxncw.supabase.co",
       "sb_publishable_YzGma-y1pGVUKfYwCOcXiQ_N4wbleIE"
     );
 
-    async function loginUser() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+    function togglePassword() {
+      const password = document.getElementById("password");
+      password.type = password.type === "password" ? "text" : "password";
+    }
 
-      if (!email || !password) {
-        alert("Please enter email and password");
+    async function loginUser() {
+      const loginType = document.getElementById("loginType").value;
+      const loginInput = document.getElementById("loginInput").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
+
+      message.textContent = "";
+
+      if (!loginInput || !password) {
+        message.textContent = "Please enter your login details.";
         return;
       }
 
-      const { error } = await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
+      let emailToUse = loginInput;
 
-      if (error) {
-        alert(error.message);
-      } else {
-        alert("Login successful");
-        window.location.href = "dashboard.html";
-      }
-    }
+      try {
+        if (loginType === "parent" && !loginInput.includes("@")) {
+          const { data: studentRecord, error: studentError } = await supabaseClient
+            .from("students")
+            .select("parent_email")
+            .eq("student_id_number", loginInput)
+            .single();
 
-    async function signInWithGoogle() {
-      const { error } = await supabaseClient.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin + "/dashboard.html"
+          if (studentError || !studentRecord) {
+            message.textContent = "Student ID not found.";
+            return;
+          }
+
+          emailToUse = studentRecord.parent_email;
         }
-      });
 
-      if (error) {
-        alert(error.message);
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: emailToUse,
+          password: password
+        });
+
+        if (error) {
+          message.textContent = error.message;
+          return;
+        }
+
+        const user = data.user;
+
+        const { data: profile, error: profileError } = await supabaseClient
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
+
+        if (profileError || !profile) {
+          message.textContent = "Profile not found.";
+          return;
+        }
+
+        if (loginType === "parent" && profile.role !== "parent") {
+          message.textContent = "This account is not a parent account.";
+          return;
+        }
+
+        if (loginType === "teacher" && profile.role !== "teacher") {
+          message.textContent = "This account is not a teacher account.";
+          return;
+        }
+
+        if (loginType === "admin" && profile.role !== "admin") {
+          message.textContent = "This account is not an admin account.";
+          return;
+        }
+
+        if (profile.role === "parent") {
+          window.location.href = "parent-dashboard.html";
+        } else if (profile.role === "teacher") {
+          window.location.href = "teacher-dashboard.html";
+        } else if (profile.role === "admin") {
+          window.location.href = "admin-dashboard.html";
+        }
+
+      } catch (err) {
+        message.textContent = "Something went wrong. Please try again.";
       }
     }
   </script>
