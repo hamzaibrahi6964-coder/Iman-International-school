@@ -72,11 +72,42 @@
     </div>
   </div>
 
-  <script>
-    function togglePassword() {
-      const password = document.getElementById("password");
-      password.type = password.type === "password" ? "text" : "password";
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+  
+function togglePassword() {
+  const password = document.getElementById("password");
+  password.type = password.type === "password" ? "text" : "password";
+}
+
+const supabaseClient = supabase.createClient(
+  "https://glmokdmpzafqufidxncw.supabase.co",
+  "sb_publishable_YzGma-y1pGVUKfYwCOcXiQ_N4wbleIE"
+);
+
+async function loginUser() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    alert("Login successful");
+    window.location.href = "dashboard.html";
+  }
+}
+</script>
+  
 </body>
 </html>
