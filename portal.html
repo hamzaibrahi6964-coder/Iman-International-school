@@ -68,6 +68,7 @@
         </div>
 
         <button class="btn portal-btn" onclick="loginUser()">Login</button>
+
         <p id="message" style="margin-top:12px;color:#c81f32;font-weight:600;"></p>
 
         <p class="back-link"><a href="index.html">← Back to website</a></p>
@@ -78,10 +79,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <script>
-    const supabaseClient = supabase.createClient(
-      "https://glmokdmpzafqufidxncw.supabase.co",
-      "sb_publishable_YzGma-y1pGVUKfYwCOcXiQ_N4wbleIE"
-    );
+    const supabaseUrl = "https://glmokdmpzafqufidxncw.supabase.co";
+    const supabaseKey = "sb_publishable_YzGma-y1pGVUKfYwCOcXiQ_N4wbleIE";
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     function togglePassword() {
       const password = document.getElementById("password");
@@ -106,12 +106,18 @@
       try {
         if (loginType === "parent" && !loginInput.includes("@")) {
           const { data: studentRecord, error: studentError } = await supabaseClient
-            .from("students")
+            .from("student")
             .select("parent_email")
             .eq("student_id_number", loginInput)
             .single();
 
-          if (studentError || !studentRecord) {
+          if (studentError) {
+            console.log("STUDENT LOOKUP ERROR:", studentError);
+            message.textContent = "Student lookup error: " + studentError.message;
+            return;
+          }
+
+          if (!studentRecord) {
             message.textContent = "Student ID not found.";
             return;
           }
@@ -119,54 +125,73 @@
           emailToUse = studentRecord.parent_email;
         }
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
+        const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
           email: emailToUse,
           password: password
         });
 
-        if (error) {
-          message.textContent = error.message;
+        if (authError) {
+          console.log("AUTH ERROR:", authError);
+          message.textContent = authError.message;
           return;
         }
 
-        const user = data.user;
+        const user = authData.user;
+
+        if (!user) {
+          message.textContent = "Login failed. User not found.";
+          return;
+        }
 
         const { data: profile, error: profileError } = await supabaseClient
           .from("profiles")
-          .select("role")
+          .select("*")
           .eq("id", user.id)
           .single();
 
-        if (profileError || !profile) {
+        if (profileError) {
+          console.log("PROFILE ERROR:", profileError);
+          message.textContent = "Profile error: " + profileError.message;
+          return;
+        }
+
+        if (!profile) {
           message.textContent = "Profile not found.";
           return;
         }
 
-        if (loginType === "parent" && profile.role !== "parent") {
+        console.log("PROFILE FOUND:", profile);
+
+        const role = String(profile.role).toLowerCase();
+
+        if (loginType === "parent" && role !== "parent") {
           message.textContent = "This account is not a parent account.";
           return;
         }
 
-        if (loginType === "teacher" && profile.role !== "teacher") {
+        if (loginType === "teacher" && role !== "teacher") {
           message.textContent = "This account is not a teacher account.";
           return;
         }
 
-        if (loginType === "admin" && profile.role !== "admin") {
+        if (loginType === "admin" && role !== "admin") {
           message.textContent = "This account is not an admin account.";
           return;
         }
 
-        if (profile.role === "parent") {
+        if (role === "parent") {
           window.location.href = "parent-dashboard.html";
-        } else if (profile.role === "teacher") {
+        } else if (role === "teacher") {
           window.location.href = "teacher-dashboard.html";
-        } else if (profile.role === "admin") {
+        } else if (role === "admin") {
           window.location.href = "admin-dashboard.html";
+        } else {
+          message.textContent = "Unknown user role.";
         }
 
       } catch (err) {
-        message.textContent = "Something went wrong. Please try again.";
+        console.log("GENERAL LOGIN ERROR:", err);
+        message.textContent = "Something went wrong. Check console.";
       }
     }
   </script>
