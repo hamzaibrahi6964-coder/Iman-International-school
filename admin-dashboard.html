@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Iman International Schools</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-top">
+        <div class="dashboard-brand">
+          <img src="logo.jpg" alt="School logo" />
+          <div>
+            <h2>Iman School</h2>
+            <p>Admin Panel</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#overview" class="active">Dashboard</a>
+        <a href="#add-student">Add Student</a>
+        <a href="#add-teacher">Add Teacher</a>
+        <a href="#records">School Records</a>
+        <a href="#announcements">Announcements</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a href="portal.html" class="logout-btn">Logout</a>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="dashboard-header" id="overview">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Manage students, teachers, parent connections, and school data.</p>
+        </div>
+        <div class="dashboard-header-right">
+          <span class="status-pill">Admin Access</span>
+        </div>
+      </header>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <h3>Total Students</h3>
+          <p>120</p>
+        </div>
+        <div class="summary-card">
+          <h3>Total Teachers</h3>
+          <p>18</p>
+        </div>
+        <div class="summary-card">
+          <h3>Parents Linked</h3>
+          <p>95</p>
+        </div>
+        <div class="summary-card">
+          <h3>Branch</h3>
+          <p>Rigasa</p>
+        </div>
+      </section>
+
+      <section class="dashboard-card" id="add-student">
+        <div class="card-head">
+          <h2>Add Student</h2>
+          <p>Use this form to register a student and link the student to a parent email.</p>
+        </div>
+
+        <form class="dashboard-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Student Full Name</label>
+              <input type="text" placeholder="Enter student's full name" />
+            </div>
+
+            <div class="form-group">
+              <label>Student ID Number</label>
+              <input type="text" placeholder="Example: IMN/RGS/JSS1/001" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Class Name</label>
+              <input type="text" placeholder="Example: JSS1" />
+            </div>
+
+            <div class="form-group">
+              <label>Branch</label>
+              <select>
+                <option>Rigasa</option>
+                <option>Tudun Wada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Parent Email</label>
+              <input type="email" placeholder="Enter parent email" />
+            </div>
+
+            <div class="form-group">
+              <label>Admission Session</label>
+              <input type="text" placeholder="Example: 2025/2026" />
+            </div>
+          </div>
+
+          <button type="button" class="btn">Save Student</button>
+        </form>
+      </section>
+
+      <section class="dashboard-card" id="add-teacher">
+        <div class="card-head">
+          <h2>Add Teacher</h2>
+          <p>Register teacher details for school records and subject assignment.</p>
+        </div>
+
+        <form class="dashboard-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Teacher Full Name</label>
+              <input type="text" placeholder="Enter teacher full name" />
+            </div>
+
+            <div class="form-group">
+              <label>Teacher Email</label>
+              <input type="email" placeholder="Enter teacher email" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Staff ID</label>
+              <input type="text" placeholder="Example: IMN/STF/001" />
+            </div>
+
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" placeholder="Example: Mathematics" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Class Assigned</label>
+              <input type="text" placeholder="Example: JSS1" />
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+              <select>
+                <option>active</option>
+                <option>inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="button" class="btn">Save Teacher</button>
+        </form>
+      </section>
+
+      <section class="dashboard-card" id="records">
+        <div class="card-head">
+          <h2>Recent School Records</h2>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>ID</th>
+                <th>Class / Subject</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Musa Ali</td>
+                <td>Student</td>
+                <td>IMN/RGS/JSS1/001</td>
+                <td>JSS1</td>
+                <td><span class="tag warning">Linked</span></td>
+              </tr>
+              <tr>
+                <td>Mr. Bello</td>
+                <td>Teacher</td>
+                <td>IMN/STF/001</td>
+                <td>Mathematics</td>
+                <td><span class="tag success">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-card" id="announcements">
+        <div class="card-head">
+          <h2>Admin Notes</h2>
+        </div>
+
+        <div class="announcement-box">
+          <h3>System Reminder</h3>
+          <p>Make sure every student record is linked to the correct parent email before parent login is tested.</p>
+        </div>
+
+        <div class="announcement-box">
+          <h3>Teacher Setup</h3>
+          <p>Teacher profiles should only be marked active after admin confirms subject and class assignment.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
