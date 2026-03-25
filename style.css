@@ -926,3 +926,51 @@ table th{
     font-size:30px;
   }
 }
+
+/* =========================
+   ADMIN DASHBOARD FORM
+========================= */
+
+.dashboard-form{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.dashboard-form .form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.dashboard-form label{
+  font-weight:700;
+  margin-bottom:8px;
+  color:#16264a;
+}
+
+.dashboard-form input,
+.dashboard-form select{
+  width:100%;
+  padding:14px 16px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  font-size:15px;
+  background:#fff;
+}
+
+.tag.success{
+  background:#e2f7e8;
+  color:#1f7a3d;
+}
+
+@media (max-width: 768px){
+  .form-row{
+    grid-template-columns:1fr;
+  }
+}
