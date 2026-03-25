@@ -105,11 +105,10 @@
 
       try {
         if (loginType === "parent" && !loginInput.includes("@")) {
-          const { data: studentRecord, error: studentError } = await supabaseClient
+          const { data: studentRows, error: studentError } = await supabaseClient
             .from("student")
             .select("parent_email")
-            .eq("student_id_number", loginInput)
-            .single();
+            .eq("student_id_number", loginInput);
 
           if (studentError) {
             console.log("STUDENT LOOKUP ERROR:", studentError);
@@ -117,12 +116,18 @@
             return;
           }
 
-          if (!studentRecord) {
+          if (!studentRows || studentRows.length === 0) {
             message.textContent = "Student ID not found.";
             return;
           }
 
-          emailToUse = studentRecord.parent_email;
+          if (studentRows.length > 1) {
+            message.textContent = "Duplicate student record found.";
+            console.log("DUPLICATE STUDENT RECORDS:", studentRows);
+            return;
+          }
+
+          emailToUse = studentRows[0].parent_email;
         }
 
         const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
@@ -143,11 +148,10 @@
           return;
         }
 
-        const { data: profile, error: profileError } = await supabaseClient
+        const { data: profilesData, error: profileError } = await supabaseClient
           .from("profiles")
           .select("*")
-          .eq("id", user.id)
-          .single();
+          .eq("id", user.id);
 
         if (profileError) {
           console.log("PROFILE ERROR:", profileError);
@@ -155,14 +159,21 @@
           return;
         }
 
-        if (!profile) {
+        if (!profilesData || profilesData.length === 0) {
           message.textContent = "Profile not found.";
           return;
         }
 
-        console.log("PROFILE FOUND:", profile);
+        if (profilesData.length > 1) {
+          message.textContent = "Duplicate profile found for this user.";
+          console.log("DUPLICATE PROFILES:", profilesData);
+          return;
+        }
 
+        const profile = profilesData[0];
         const role = String(profile.role).toLowerCase();
+
+        console.log("PROFILE FOUND:", profile);
 
         if (loginType === "parent" && role !== "parent") {
           message.textContent = "This account is not a parent account.";
@@ -191,7 +202,7 @@
 
       } catch (err) {
         console.log("GENERAL LOGIN ERROR:", err);
-        message.textContent = "Something went wrong. Check console.";
+        message.textContent = "Something went wrong. Check browser console.";
       }
     }
   </script>
