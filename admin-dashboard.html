@@ -28,7 +28,7 @@
       </nav>
 
       <div class="sidebar-bottom">
-        <a href="portal.html" class="logout-btn">Logout</a>
+        <a href="portal.html" class="logout-btn" onclick="logoutUser(event)">Logout</a>
       </div>
     </aside>
 
@@ -36,7 +36,7 @@
       <header class="dashboard-header" id="overview">
         <div>
           <h1>Admin Dashboard</h1>
-          <p>Manage students, teachers, parent connections, and school data.</p>
+          <p id="adminWelcome">Manage students, teachers, parent connections, and school data.</p>
         </div>
         <div class="dashboard-header-right">
           <span class="status-pill">Admin Access</span>
@@ -46,15 +46,15 @@
       <section class="summary-grid">
         <div class="summary-card">
           <h3>Total Students</h3>
-          <p>120</p>
+          <p id="totalStudents">0</p>
         </div>
         <div class="summary-card">
           <h3>Total Teachers</h3>
-          <p>18</p>
+          <p id="totalTeachers">0</p>
         </div>
         <div class="summary-card">
           <h3>Parents Linked</h3>
-          <p>95</p>
+          <p id="totalParents">0</p>
         </div>
         <div class="summary-card">
           <h3>Branch</h3>
@@ -68,54 +68,56 @@
           <p>Use this form to register a student and link the student to a parent email.</p>
         </div>
 
-        <form class="dashboard-form">
+        <form class="dashboard-form" onsubmit="saveStudent(event)">
           <div class="form-row">
             <div class="form-group">
-              <label>Student Full Name</label>
-              <input type="text" placeholder="Enter student's full name" />
+              <label for="studentFullName">Student Full Name</label>
+              <input type="text" id="studentFullName" placeholder="Enter student's full name" />
             </div>
 
             <div class="form-group">
-              <label>Student ID Number</label>
-              <input type="text" placeholder="Example: IMN/RGS/JSS1/001" />
+              <label for="studentIdNumber">Student ID Number</label>
+              <input type="text" id="studentIdNumber" placeholder="Example: IMN/RGS/JSS1/001" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Class Name</label>
-              <input type="text" placeholder="Example: JSS1" />
+              <label for="studentClassName">Class Name</label>
+              <input type="text" id="studentClassName" placeholder="Example: JSS1" />
             </div>
 
             <div class="form-group">
-              <label>Branch</label>
-              <select>
-                <option>Rigasa</option>
-                <option>Tudun Wada</option>
+              <label for="studentBranch">Branch</label>
+              <select id="studentBranch">
+                <option value="">Select branch</option>
+                <option value="Rigasa">Rigasa</option>
+                <option value="Tudun Wada">Tudun Wada</option>
               </select>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Parent Email</label>
-              <input type="email" placeholder="Enter parent email" />
+              <label for="parentEmail">Parent Email</label>
+              <input type="email" id="parentEmail" placeholder="Enter parent email" />
             </div>
 
             <div class="form-group">
-              <label>Admission Session</label>
-              <input type="text" placeholder="Example: 2025/2026" />
+              <label for="admissionSession">Admission Session</label>
+              <input type="text" id="admissionSession" placeholder="Example: 2025/2026" />
             </div>
           </div>
 
-          <button type="button" class="btn">Save Student</button>
+          <button type="submit" class="btn">Save Student</button>
+          <p id="studentMessage" style="margin-top:12px;font-weight:700;"></p>
         </form>
       </section>
 
       <section class="dashboard-card" id="add-teacher">
         <div class="card-head">
           <h2>Add Teacher</h2>
-          <p>Register teacher details for school records and subject assignment.</p>
+          <p>This section will be connected next.</p>
         </div>
 
         <form class="dashboard-form">
@@ -164,34 +166,23 @@
 
       <section class="dashboard-card" id="records">
         <div class="card-head">
-          <h2>Recent School Records</h2>
+          <h2>Recent Students</h2>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>ID</th>
-                <th>Class / Subject</th>
-                <th>Status</th>
+                <th>Student Name</th>
+                <th>Student ID</th>
+                <th>Class</th>
+                <th>Branch</th>
+                <th>Parent Email</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="studentTableBody">
               <tr>
-                <td>Musa Ali</td>
-                <td>Student</td>
-                <td>IMN/RGS/JSS1/001</td>
-                <td>JSS1</td>
-                <td><span class="tag warning">Linked</span></td>
-              </tr>
-              <tr>
-                <td>Mr. Bello</td>
-                <td>Teacher</td>
-                <td>IMN/STF/001</td>
-                <td>Mathematics</td>
-                <td><span class="tag success">Active</span></td>
+                <td colspan="5">Loading student records...</td>
               </tr>
             </tbody>
           </table>
@@ -215,5 +206,153 @@
       </section>
     </main>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabaseUrl = "https://glmokdmpzafqufidxncw.supabase.co";
+    const supabaseKey = "sb_publishable_YzGma-y1pGVUKfYwCOcXiQ_N4wbleIE";
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function loadAdminDashboard() {
+      const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+
+      if (userError || !userData.user) {
+        window.location.href = "portal.html";
+        return;
+      }
+
+      const user = userData.user;
+
+      const { data: profileRows, error: profileError } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id);
+
+      if (profileError || !profileRows || profileRows.length === 0) {
+        alert("Admin profile could not be loaded.");
+        return;
+      }
+
+      const profile = profileRows[0];
+      const role = String(profile.role).toLowerCase();
+
+      if (role !== "admin") {
+        alert("This account is not an admin account.");
+        window.location.href = "portal.html";
+        return;
+      }
+
+      document.getElementById("adminWelcome").textContent =
+        "Welcome back, " + profile.full_name + ". Manage students, teachers, parent connections, and school data.";
+
+      await loadStudents();
+      await loadCounts();
+    }
+
+    async function loadStudents() {
+      const tableBody = document.getElementById("studentTableBody");
+
+      const { data: students, error } = await supabaseClient
+        .from("student")
+        .select("*");
+
+      if (error) {
+        tableBody.innerHTML = "<tr><td colspan='5'>Could not load students.</td></tr>";
+        return;
+      }
+
+      if (!students || students.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='5'>No student records yet.</td></tr>";
+        return;
+      }
+
+      tableBody.innerHTML = "";
+
+      students.forEach(student => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${student.full_name || ""}</td>
+          <td>${student.student_id_number || ""}</td>
+          <td>${student.class_name || ""}</td>
+          <td>${student.branch || ""}</td>
+          <td>${student.parent_email || ""}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    async function loadCounts() {
+      const { data: students } = await supabaseClient.from("student").select("*");
+      const { data: teachers } = await supabaseClient.from("teachers").select("*");
+      const { data: parents } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("role", "parent");
+
+      document.getElementById("totalStudents").textContent = students ? students.length : 0;
+      document.getElementById("totalTeachers").textContent = teachers ? teachers.length : 0;
+      document.getElementById("totalParents").textContent = parents ? parents.length : 0;
+    }
+
+    async function saveStudent(event) {
+      event.preventDefault();
+
+      const message = document.getElementById("studentMessage");
+
+      const full_name = document.getElementById("studentFullName").value.trim();
+      const student_id_number = document.getElementById("studentIdNumber").value.trim();
+      const class_name = document.getElementById("studentClassName").value.trim();
+      const branch = document.getElementById("studentBranch").value.trim();
+      const parent_email = document.getElementById("parentEmail").value.trim();
+      const admission_session = document.getElementById("admissionSession").value.trim();
+
+      message.style.color = "#c81f32";
+      message.textContent = "";
+
+      if (!full_name || !student_id_number || !class_name || !branch || !parent_email) {
+        message.textContent = "Please fill in all required student fields.";
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from("student")
+        .insert([
+          {
+            full_name,
+            student_id_number,
+            class_name,
+            branch,
+            parent_email
+          }
+        ]);
+
+      if (error) {
+        console.log("SAVE STUDENT ERROR:", error);
+        message.textContent = "Could not save student: " + error.message;
+        return;
+      }
+
+      message.style.color = "green";
+      message.textContent = "Student saved successfully.";
+
+      document.getElementById("studentFullName").value = "";
+      document.getElementById("studentIdNumber").value = "";
+      document.getElementById("studentClassName").value = "";
+      document.getElementById("studentBranch").value = "";
+      document.getElementById("parentEmail").value = "";
+      document.getElementById("admissionSession").value = "";
+
+      await loadStudents();
+      await loadCounts();
+    }
+
+    async function logoutUser(event) {
+      event.preventDefault();
+      await supabaseClient.auth.signOut();
+      window.location.href = "portal.html";
+    }
+
+    loadAdminDashboard();
+  </script>
 </body>
 </html>
