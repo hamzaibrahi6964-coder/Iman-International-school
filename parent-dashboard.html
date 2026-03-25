@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Dashboard - Iman International Schools</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-top">
+        <div class="dashboard-brand">
+          <img src="logo.jpg" alt="School logo" />
+          <div>
+            <h2>Iman School</h2>
+            <p>Parent Portal</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#overview" class="active">Dashboard</a>
+        <a href="#student-profile">Child Profile</a>
+        <a href="#fees">School Fees</a>
+        <a href="#results">Results</a>
+        <a href="#attendance">Attendance</a>
+        <a href="#activities">Activities</a>
+        <a href="#announcements">Announcements</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a href="portal.html" class="logout-btn">Logout</a>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="dashboard-header" id="overview">
+        <div>
+          <h1>Parent Dashboard</h1>
+          <p>Welcome back. Here is your child’s school information overview.</p>
+        </div>
+        <div class="dashboard-header-right">
+          <span class="status-pill">Active Session</span>
+        </div>
+      </header>
+
+      <!-- Summary cards -->
+      <section class="summary-grid">
+        <div class="summary-card">
+          <h3>Child Name</h3>
+          <p>Musa Ali</p>
+        </div>
+        <div class="summary-card">
+          <h3>Student ID</h3>
+          <p>IMN/RGS/JSS1/001</p>
+        </div>
+        <div class="summary-card">
+          <h3>Class</h3>
+          <p>JSS1</p>
+        </div>
+        <div class="summary-card">
+          <h3>Branch</h3>
+          <p>Rigasa</p>
+        </div>
+      </section>
+
+      <!-- Parent + student profile -->
+      <section class="dashboard-two-col" id="student-profile">
+        <div class="dashboard-card">
+          <div class="card-head">
+            <h2>Parent Profile</h2>
+          </div>
+          <div class="profile-block">
+            <img src="logo.jpg" alt="Parent profile" class="profile-avatar" />
+            <div>
+              <h3>Parent One</h3>
+              <p>Email: parent1@gmail.com</p>
+              <p>Phone: 07013707382</p>
+              <p>Relationship: Father / Mother</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-head">
+            <h2>Child Profile</h2>
+          </div>
+          <div class="profile-block">
+            <img src="background.jpg" alt="Student profile" class="student-avatar" />
+            <div>
+              <h3>Musa Ali</h3>
+              <p>Student ID: IMN/RGS/JSS1/001</p>
+              <p>Class: JSS1</p>
+              <p>Branch: Rigasa</p>
+              <p>Session: 2025/2026</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-card" id="fees">
+        <div class="card-head">
+          <h2>School Fees Summary</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Term</th>
+                <th>Amount Due</th>
+                <th>Amount Paid</th>
+                <th>Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>First Term</td>
+                <td>₦50,000</td>
+                <td>₦30,000</td>
+                <td>₦20,000</td>
+                <td><span class="tag warning">Part Payment</span></td>
+              </tr>
+              <tr>
+                <td>Second Term</td>
+                <td>₦50,000</td>
+                <td>₦0</td>
+                <td>₦50,000</td>
+                <td><span class="tag danger">Unpaid</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-card" id="results">
+        <div class="card-head">
+          <h2>Term Results Overview</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Test Score</th>
+                <th>Exam Score</th>
+                <th>Total</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mathematics</td>
+                <td>18</td>
+                <td>62</td>
+                <td>80</td>
+                <td>A</td>
+              </tr>
+              <tr>
+                <td>English</td>
+                <td>16</td>
+                <td>58</td>
+                <td>74</td>
+                <td>B</td>
+              </tr>
+              <tr>
+                <td>Basic Science</td>
+                <td>15</td>
+                <td>55</td>
+                <td>70</td>
+                <td>B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-two-col" id="attendance">
+        <div class="dashboard-card">
+          <div class="card-head">
+            <h2>Attendance Summary</h2>
+          </div>
+          <div class="mini-stat-grid">
+            <div class="mini-stat">
+              <h3>90%</h3>
+              <p>Attendance Rate</p>
+            </div>
+            <div class="mini-stat">
+              <h3>45</h3>
+              <p>Days Present</p>
+            </div>
+            <div class="mini-stat">
+              <h3>5</h3>
+              <p>Days Absent</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card" id="activities">
+          <div class="card-head">
+            <h2>Recent Activities</h2>
+          </div>
+          <ul class="activity-list">
+            <li>Participated in class debate competition</li>
+            <li>Submitted Mathematics assignment</li>
+            <li>Attended school assembly and club meeting</li>
+            <li>Took first term continuous assessment</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="dashboard-card" id="announcements">
+        <div class="card-head">
+          <h2>School Announcements</h2>
+        </div>
+        <div class="announcement-box">
+          <h3>Resumption Notice</h3>
+          <p>All students are expected to resume on Monday by 7:30 AM.</p>
+        </div>
+        <div class="announcement-box">
+          <h3>Fees Reminder</h3>
+          <p>Parents are reminded to complete outstanding fee payments before the end of the month.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
